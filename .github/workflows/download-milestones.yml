@@ -1,0 +1,25 @@
+name: Download milestones
+on:
+  schedule: [{ cron: "17 6 * * *" }]
+  workflow_dispatch:
+permissions: { contents: write, issues: write }
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Count release downloads and open an issue at each milestone
+        env: { GH_TOKEN: "${{ github.token }}", REPO: "${{ github.repository }}" }
+        run: |
+          total=$(gh api "repos/$REPO/releases" --paginate --jq "[.[].assets[].download_count] | add // 0" | awk "{s+=\$1} END {print s+0}")
+          echo "Total downloads: $total"
+          mkdir -p .github/stats && echo "{\"date\":\"$(date -u +%F)\",\"downloads\":$total}" > .github/stats/downloads.json
+          for m in 1000 10000 100000 1000000; do
+            if [ "$total" -ge "$m" ]; then
+              title="Milestone: $m downloads reached"
+              n=$(gh issue list -R "$REPO" --state all --search "\"$title\" in:title" --json number --jq length)
+              [ "$n" = "0" ] && gh issue create -R "$REPO" --title "$title" --body "Total release downloads: $total (checked $(date -u +%F))."
+            fi
+          done
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/stats/downloads.json && git commit -m "Update download stats" && git push || true
