@@ -662,7 +662,7 @@ const SHEETS = {
     </ol>
     <h3>⭐ Android — App native (Adhan en veille)</h3>
     <p>Pour que l'<b>Adhan sonne même téléphone verrouillé / en veille</b>, installez l'application native Android :</p>
-    <a href="Nur-Android.apk" download class="apk-dl">⬇ Télécharger l'app Android (.apk)</a>
+    <a href="https://github.com/Walmes1/nur-adhan-adhkar/releases/latest/download/Nur-Android.apk" download class="apk-dl">⬇ Télécharger l'app Android (.apk)</a>
     <p style="font-size:12px;opacity:0.75;margin-top:8px">Ouvrez le fichier téléchargé → autorisez « sources inconnues » → Installer. Puis autorisez <b>Notifications</b> + <b>Alarmes</b> et désactivez l'optimisation de batterie pour Nûr.</p>
     <h3>🤖 Android (juste le site web)</h3>
     <ol>
