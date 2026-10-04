@@ -14,4 +14,4 @@ Free app: automatic Adhan for the 5 prayers, morning/evening Adhkar, Douaa, Roqy
 
 ## Licence
 Code : MIT. Les enregistrements audio restent la propriété de leurs récitateurs / ayants droit (voir LICENSE).
-Services utilisés : everyayah.com, YouTube (nocookie), open-meteo, bigdatacloud, formsubmit.co (formulaire de contact).
+Services utilisés : everyayah.com, YouTube (nocookie), open-meteo, bigdatacloud, GitHub Issues (contact).

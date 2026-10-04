@@ -649,8 +649,8 @@ function renderYtGrid(filter) {
 /* ===================== Sheet : Impressum / Datenschutz / Kontakt ===================== */
 const SHEETS = {
   impressum: { title: 'Impressum', html: `<h3>Angaben gemäß § 5 DDG</h3><p><b>Nûr — Adhan &amp; Adhkar</b></p><h3>Verantwortlich</h3><p><b>Messaoudi Oualid</b><br>Dortmund, Deutschland</p><h3>Kontakt</h3><p>Über das Kontaktformular.</p><h3>Quellen &amp; Lizenzen der Audios</h3><p style="font-size:13px;line-height:1.55"><b>Koran-Verse:</b> everyayah.com — Lizenz <b>CC&nbsp;BY-NC</b> (kostenlose, nicht-kommerzielle Nutzung mit Quellenangabe).<br><b>Roqya:</b> archive.org — <b>Gemeinfrei / Public Domain &amp; CC0</b>. Rezitatoren: M.&nbsp;Al-Afasy, A.&nbsp;Al-Ajmy, S.&nbsp;Al-Ghamdi, Y.&nbsp;Al-Dosari, N.&nbsp;Al-Qatami, K.&nbsp;Al-Qahtani, I.&nbsp;Abkar.<br><b>Adhan:</b> archive.org — <b>Public Domain</b> (Doha, Qatar).<br><b>Videos:</b> YouTube (offizieller eingebetteter Player).</p><h3>Haftungsausschluss</h3><p>Die berechneten Gebetszeiten dienen als Orientierung.</p><div class="sig">✦ Diese App ist <b>kostenlos auf Lebenszeit</b> und <b>werbefrei</b>. ✦<br>Créé par <b>Messaoudi Oualid</b></div>` },
-  datenschutz: { title: 'Datenschutz', html: `<h3>Datenschutzerklärung</h3><p>Die App läuft <b>lokal auf Ihrem Gerät</b>. Keine Konten, kein Tracking. Standort &amp; Einstellungen werden nur lokal gespeichert.</p><h3>Standort</h3><p>Per GPS (Browser) oder Stadteingabe (open-meteo.com). Nur lokal gespeichert.</p><h3>Audio &amp; Video</h3><p>Koran-Verse: everyayah.com (CC&nbsp;BY-NC, auf Wunsch offline gespeichert). Roqya &amp; Adhan: archive.org (gemeinfrei / Public Domain). Videos: youtube-nocookie.com.</p><h3>Externe Dienste</h3><p>open-meteo.com, bigdatacloud.net, everyayah.com, youtube-nocookie.com, formsubmit.co erhalten technisch Ihre IP-Adresse.</p><div class="sig">Verantwortlich: <b>Messaoudi Oualid</b></div>` },
-  kontakt: { title: 'Kontakt', html: `<p>Kurze Nachricht an den Entwickler (max. 150 Zeichen):</p><textarea id="c-msg" maxlength="150" rows="5" placeholder="Ihre Nachricht…"></textarea><div class="crow"><span class="ccount" id="c-count">0 / 150</span><button class="csend" id="c-send">Senden ✉</button></div><div class="cstatus" id="c-status"></div>` },
+  datenschutz: { title: 'Datenschutz', html: `<h3>Datenschutzerklärung</h3><p>Die App läuft <b>lokal auf Ihrem Gerät</b>. Keine Konten, kein Tracking. Standort &amp; Einstellungen werden nur lokal gespeichert.</p><h3>Standort</h3><p>Per GPS (Browser) oder Stadteingabe (open-meteo.com). Nur lokal gespeichert.</p><h3>Audio &amp; Video</h3><p>Koran-Verse: everyayah.com (CC&nbsp;BY-NC, auf Wunsch offline gespeichert). Roqya &amp; Adhan: archive.org (gemeinfrei / Public Domain). Videos: youtube-nocookie.com.</p><h3>Externe Dienste</h3><p>open-meteo.com, bigdatacloud.net, everyayah.com, youtube-nocookie.com, github.com (nur beim Kontakt) erhalten technisch Ihre IP-Adresse.</p><div class="sig">Verantwortlich: <b>Messaoudi Oualid</b></div>` },
+  kontakt: { title: 'Kontakt', html: `<p>Fragen, Ideen oder Fehler? Schreiben Sie uns auf GitHub — kostenlos, ohne E-Mail-Adresse.</p><p>Questions, idées ou bugs ? Écrivez-nous sur GitHub.</p><a class="apk-dl" href="https://github.com/Walmes1/nur-adhan-adhkar/issues/new" target="_blank" rel="noopener">✉ Nachricht senden / Envoyer un message</a>` },
   install: { title: 'Installer l\'app', html: `
     <p>Ajoutez <b>Nûr</b> à votre écran d'accueil pour l'ouvrir comme une vraie application : <b>plein écran</b>, <b>hors ligne</b>, avec l'icône mosquée 🕌.</p>
     <h3>🍎 iPhone / iPad (Safari)</h3>
@@ -710,26 +710,7 @@ installBanner.addEventListener('click', triggerInstall);
 document.getElementById('link-install').addEventListener('click', () => openSheet('install'));
 document.getElementById('consent-install').addEventListener('click', () => openSheet('install'));
 
-function wireContact() {
-  const msg = document.getElementById('c-msg'), cnt = document.getElementById('c-count'), st = document.getElementById('c-status'), snd = document.getElementById('c-send');
-  msg.addEventListener('input', () => cnt.textContent = msg.value.length + ' / 150');
-  snd.addEventListener('click', async () => {
-    const v = msg.value.trim(); if (!v) { st.className = 'cstatus err'; st.textContent = 'Bitte eine Nachricht eingeben.'; return; }
-    snd.disabled = true; st.className = 'cstatus'; st.textContent = 'Senden…';
-    // e-mail non affichée : encodée en base64
-    const to = atob('bGlkb21lc3Nhb3VkaUBob3RtYWlsLmZy');
-    try {
-      const r = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ Nachricht: v, _subject: 'Nûr App — neue Nachricht', _template: 'table', _captcha: 'false' })
-      });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok) { st.className = 'cstatus ok'; st.textContent = (d.success === 'true') ? 'Gesendet ✓ Vielen Dank!' : 'Registriert ✓ (einmalige Aktivierung per E-Mail nötig)'; msg.value = ''; cnt.textContent = '0 / 150'; }
-      else { st.className = 'cstatus err'; st.textContent = 'Fehler.'; }
-    } catch { st.className = 'cstatus err'; st.textContent = 'Keine Internetverbindung?'; }
-    snd.disabled = false;
-  });
-}
+function wireContact() { /* Kontakt läuft über GitHub Issues — keine E-Mail im Code */ }
 
 /* ===================== Démarrage ===================== */
 renderAll();
